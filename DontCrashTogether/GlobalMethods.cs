@@ -175,7 +175,7 @@ namespace DontCrashTogether
         public static string Serialize(this object obj)
         {
             var ser = new System.Xml.Serialization.XmlSerializer(obj.GetType());
-            var ms = new System.IO.MemoryStream();
+            var ms = new MemoryStream();
             ser.Serialize(ms, obj);
             return new string(ms.ToArray().Select(x => (char)x).ToArray());
         }
@@ -189,7 +189,7 @@ namespace DontCrashTogether
         public static T Deserialize<T>(this string str)
         {
             var deser = new System.Xml.Serialization.XmlSerializer(typeof(T));
-            var reader = new System.IO.StringReader(str);
+            var reader = new StringReader(str);
             return (T)deser.Deserialize(reader);
         }
 
@@ -265,6 +265,34 @@ namespace DontCrashTogether
                 pb.Value = value + 1;
             }
             pb.Value = value;
+        }
+
+        public static string CleanseAlphanumeric(this string str)
+        {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+            var sb = new System.Text.StringBuilder();
+            for(int i = 0; i < str.Length; i++)
+            {
+                if (char.IsLetterOrDigit(str[i]))
+                {
+                    sb.Append(str[i]);
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string GetFileName(this WorldSave world)
+        {
+            string worldName = world.WorldName.CleanseAlphanumeric();
+            if (string.IsNullOrEmpty(worldName))
+            {
+                worldName = "World";
+            }
+
+            return string.Format("{0}_{1}_{2}", worldName, world.SessionId, world.LastSaved.ToString("yyyyMMddTHHmmss"));
         }
     }
 }

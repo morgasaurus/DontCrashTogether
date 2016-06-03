@@ -112,7 +112,7 @@ namespace DontCrashTogether
                 GlobalMethods.ShowError("That world slot is empty.");
                 return;
             }
-            SaveFileDialog_SaveWorld.FileName = string.Format("WorldSave_{0}_{1}.xml", world.SessionId, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            SaveFileDialog_SaveWorld.FileName = world.GetFileName();
             if (SaveFileDialog_SaveWorld.ShowDialog() == DialogResult.Cancel)
             {                
                 return;
